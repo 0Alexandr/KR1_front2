@@ -37,16 +37,13 @@ app.get('/api/products/:id', (req, res) => {
 app.post('/api/products', (req, res) => {
     const { name, cost, desc, img } = req.body;
 
-    // Генерация случайного числа от 1000 до 9999
-    const randomId = Math.floor(1000 + Math.random() * 9000);
+    // Генерируем ID и проверяем, нет ли такого уже в списке
+    let newId;
+    do {
+        newId = Math.floor(1000 + Math.random() * 9000);
+    } while (products.some(p => p.id === newId));
 
-    const newProduct = {
-        id: randomId, // Генерация ID
-        name,
-        cost,
-        desc: desc || "Новое поступление",
-        img: img || 'images/default.png'
-    };
+    const newProduct = { id: newId, name, cost, desc: desc || "Новый товар", img: img || 'images/default.png' };
     products.push(newProduct);
     res.status(201).json(newProduct);
 });
